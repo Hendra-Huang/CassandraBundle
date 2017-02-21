@@ -164,22 +164,35 @@ class EntityManager implements Session, EntityManagerInterface
         $metadata = $this->getClassMetadata(get_class($entity));
         $tableName = $metadata->table['name'];
         $values = $this->readColumn($entity, $metadata);
-        $id = $values['id'];
-        unset($values['id']);
+        
+        $aKeyArguments = [];
+        foreach ($metadata->table['indexes'] as $index) {
+            $aKeyArguments[$index] = $values[$index];
+            unset($values[$index]);
+        } 
+        foreach ($metadata->table['primaryKeys'][0] as $primaryKey) {
+            $aKeyArguments[$primaryKey] = $values[$primaryKey];
+            unset($values[$primaryKey]);
+        }
+        $wherearguments = array_keys($aKeyArguments);
         $columns = array_keys($values);
-
+        
         $statement = sprintf(
-            'UPDATE "%s"."%s" SET %s WHERE id = ?',
+            'UPDATE "%s"."%s" SET %s WHERE %s',
             $this->getKeyspace(),
             $tableName,
             implode(', ', array_map(function ($column) {
                 return sprintf('%s = ?', $column);
-            }, $columns))
+            }, $columns)),
+            implode(' AND ', array_map(function ($whereargument) {
+                return sprintf('%s = ?', $whereargument);
+            }, $wherearguments))
         );
+        
         $statement = $this->decorateUpdateStatement($statement, $metadata, $options);
         $this->statements[] = [
             self::STATEMENT => $statement,
-            self::ARGUMENTS => array_merge($values, ['id' => $id]),
+            self::ARGUMENTS => array_merge($values, $aKeyArguments),
         ];
     }
 
@@ -423,6 +436,12 @@ class EntityManager implements Session, EntityManagerInterface
         $cql = sprintf('SELECT * FROM %s', $metadata->table['name']);
         $query = $this->createQuery($metadata, $cql);
 
+        return $query->getResult();
+    }
+    
+    public function getResult(ClassMetadata $metadata, $cql)
+    {
+        $query = $this->createQuery($metadata, $cql);
         return $query->getResult();
     }
 
