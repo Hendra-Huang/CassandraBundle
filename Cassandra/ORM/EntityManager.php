@@ -416,6 +416,12 @@ class EntityManager implements Session, EntityManagerInterface
 
         return $query->getResult();
     }
+    
+    public function getResult(ClassMetadata $metadata, $cql)
+    {
+        $query = $this->createQuery($metadata, $cql);
+        return $query->getResult();
+    }
 
     public function prepareArguments($arguments)
     {
