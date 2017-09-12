@@ -3,9 +3,7 @@
 namespace CassandraBundle\Cassandra\ORM;
 
 use Cassandra\BatchStatement;
-use Cassandra\ExecutionOptions;
 use Cassandra\Session;
-use Cassandra\Statement;
 use Cassandra\Type;
 use CassandraBundle\Cassandra\Connection;
 use CassandraBundle\Cassandra\ORM\Mapping\ClassMetadata;
@@ -396,13 +394,13 @@ class EntityManager implements Session, EntityManagerInterface
 
     public function prepareArguments($arguments)
     {
-        return new ExecutionOptions([self::ARGUMENTS => $arguments]);
+        return [self::ARGUMENTS => $arguments];
     }
 
     /**
      * {@inheritdoc}
      */
-    public function execute(Statement $statement, ExecutionOptions $options = null)
+    public function execute($statement, $options = null)
     {
         return $this->connection->execute($statement, $options);
     }
@@ -410,7 +408,7 @@ class EntityManager implements Session, EntityManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function executeAsync(Statement $statement, ExecutionOptions $options = null)
+    public function executeAsync($statement, $options = null)
     {
         return $this->connection->executeAsync($statement, $options);
     }
@@ -418,7 +416,7 @@ class EntityManager implements Session, EntityManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function prepare($cql, ExecutionOptions $options = null)
+    public function prepare($cql, $options = null)
     {
         return $this->connection->prepare($cql, $options);
     }
@@ -426,7 +424,7 @@ class EntityManager implements Session, EntityManagerInterface
     /**
      * {@inheritdoc}
      */
-    public function prepareAsync($cql, ExecutionOptions $options = null)
+    public function prepareAsync($cql, $options = null)
     {
         return $this->connection->prepareAsync($cql, $options);
     }
@@ -453,6 +451,14 @@ class EntityManager implements Session, EntityManagerInterface
     public function schema()
     {
         return $this->connection->schema();
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function metrics()
+    {
+        return $this->connection->metrics();
     }
 
     /**

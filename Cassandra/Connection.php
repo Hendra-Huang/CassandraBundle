@@ -149,14 +149,14 @@ class Connection
     /**
      * Executes a given statement and returns a result.
      *
-     * @param Statement        $statement statement to be executed
-     * @param ExecutionOptions $options   execution options
+     * @param Statement | string $statement statement to be executed
+     * @param ExecutionOptions   $options   execution options
      *
      * @throws \Cassandra\Exception
      *
      * @return \Cassandra\Rows execution result
      */
-    public function execute(Statement $statement, ExecutionOptions $options = null)
+    public function execute($statement, $options = null)
     {
         return $this->send('execute', [$statement, $options]);
     }
@@ -167,12 +167,12 @@ class Connection
      * Note that this method ignores ExecutionOptions::$timeout option, you can
      * provide one to Future::get() instead.
      *
-     * @param Statement        $statement statement to be executed
-     * @param ExecutionOptions $options   execution options
+     * @param Statement | string $statement statement to be executed
+     * @param ExecutionOptions   $options   execution options
      *
      * @return \Cassandra\Future future result
      */
-    public function executeAsync(Statement $statement, ExecutionOptions $options = null)
+    public function executeAsync($statement, $options = null)
     {
         return $this->send('executeAsync', [$statement, $options]);
     }
@@ -183,14 +183,14 @@ class Connection
      * Note that this method only uses the ExecutionOptions::$timeout option,
      * all other options will be ignored.
      *
-     * @param string           $cql     CQL statement string
-     * @param ExecutionOptions $options execution options
+     * @param string                   $cql     CQL statement string
+     * @param ExecutionOptions | array $options execution options
      *
      * @throws \Cassandra\Exception
      *
      * @return PreparedStatement prepared statement
      */
-    public function prepare($cql, ExecutionOptions $options = null)
+    public function prepare($cql, $options = null)
     {
         return $this->send('prepare', [$cql, $options]);
     }
@@ -200,12 +200,12 @@ class Connection
      *
      * Note that all options passed to this method will be ignored.
      *
-     * @param string           $cql     CQL string to be prepared
-     * @param ExecutionOptions $options preparation options
+     * @param string                   $cql     CQL string to be prepared
+     * @param ExecutionOptions | array $options preparation options
      *
      * @return \Cassandra\Future statement
      */
-    public function prepareAsync($cql, ExecutionOptions $options = null)
+    public function prepareAsync($cql, $options = null)
     {
         return $this->send('prepareAsync', [$cql, $options]);
     }
