@@ -28,7 +28,7 @@ class CassandraExtension extends Extension
         $loader->load('services.yml');
 
         $ormConfig = [];
-        if (isset($config['orm']) && $config['orm']) {
+        if (!empty($config['orm'])) {
             $ormConfig = $config['orm'];
         }
         $this->metadataFactoryLoad($container, $ormConfig);
@@ -64,13 +64,14 @@ class CassandraExtension extends Extension
             $definition->addMethodCall('setEventDispatcher', [new Reference('event_dispatcher')]);
         }
 
-        $container->setDefinition('cassandra.connection.'.$connectionId, $definition);
+        $container->setDefinition(sprintf('cassandra.connection.%s', $connectionId), $definition);
 
         $container
             ->register(sprintf('cassandra.%s_entity_manager', $connectionId), 'CassandraBundle\\Cassandra\\ORM\\EntityManager')
-            ->addArgument(new Reference("cassandra.connection.$connectionId"))
+            ->addArgument(new Reference(sprintf('cassandra.connection.%s', $connectionId)))
             ->addArgument(new Reference('cassandra.factory.metadata'))
-            ->addArgument(new Reference('logger'));
+            ->addArgument(new Reference('logger'))
+            ->setPublic(true);
     }
 
     /**

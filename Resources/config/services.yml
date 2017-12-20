@@ -8,3 +8,4 @@ services:
     cassandra.tools.schema_create:
         class: "CassandraBundle\\Cassandra\\ORM\\Tools\\SchemaCreate"
         arguments: ["@service_container"]
+        public: true

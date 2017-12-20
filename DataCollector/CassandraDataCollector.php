@@ -40,20 +40,14 @@ class CassandraDataCollector extends DataCollector
     }
 
     /**
-     * Collect the data.
-     *
-     * @param Request    $request   The request object
-     * @param Response   $response  The response object
-     * @param \Exception $exception An exception
+     * {@inheritdoc}
      */
     public function collect(Request $request, Response $response, \Exception $exception = null)
     {
     }
 
     /**
-     * Return the name of the collector.
-     *
-     * @return string data collector name
+     * {@inheritdoc}
      */
     public function getName()
     {
@@ -180,5 +174,12 @@ class CassandraDataCollector extends DataCollector
         }
 
         return;
+    }
+
+    /**
+     * {@inheritdoc}
+     */
+    public function reset()
+    {
     }
 }
