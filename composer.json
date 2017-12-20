@@ -20,9 +20,9 @@
     },
     "require-dev": {
         "atoum/atoum": "~2.0",
-        "symfony/framework-bundle": "~2.8|~3.0",
-        "symfony/yaml": "~2.8|~3.0",
-        "symfony/console": "~2.8|~3.0",
+        "symfony/framework-bundle": "~2.7|~3.0|~4.0",
+        "symfony/yaml": "~2.7|~3.0|~4.0",
+        "symfony/console": "~2.7|~3.0|~4.0",
         "datastax/php-driver": "v1.3.2"
     },
     "autoload": {
