@@ -309,6 +309,14 @@ class EntityManager implements Session, EntityManagerInterface
             if ($columnValue instanceOf \Cassandra\Timestamp) {
                 return $columnValue->time();
             }
+            // Cassandra\Date class
+            if ($columnValue instanceOf \Cassandra\Date) {
+                return $columnValue->seconds();
+            }
+            // Cassandra\Time class
+            if ($columnValue instanceOf \Cassandra\Time) {
+                return $columnValue->seconds();
+            }
             // Cassandra\Map class
             if ($columnValue instanceOf \Cassandra\Map) {
                 $decodedKeys = [];
