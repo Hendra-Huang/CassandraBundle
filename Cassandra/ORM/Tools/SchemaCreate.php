@@ -39,10 +39,11 @@ class SchemaCreate
                 $tableName = $metadata->table['name'];
                 $indexes = $metadata->table['indexes'];
                 $primaryKeys = $metadata->table['primaryKeys'];
+                $tableOptions = $metadata->table['tableOptions'];
 
                 if ($tableName) {
                     $schemaManager->dropTable($tableName);
-                    $schemaManager->createTable($tableName, $metadata->fieldMappings, $primaryKeys);
+                    $schemaManager->createTable($tableName, $metadata->fieldMappings, $primaryKeys, $tableOptions);
                     $schemaManager->createIndexes($tableName, $indexes);
                 }
             }

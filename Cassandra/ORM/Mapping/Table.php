@@ -39,4 +39,12 @@ final class Table extends Annotation
      * @var bool
      */
     public $ifNoExist = null;
+
+	/**
+	 * @var array
+	 */
+    public $tableOptions = [
+		'compactStorage' => false,
+		'clusteringOrder' => null,
+	];
 }

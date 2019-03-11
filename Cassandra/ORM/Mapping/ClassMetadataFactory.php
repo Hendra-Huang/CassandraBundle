@@ -186,6 +186,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
             $classMetadata->table['primaryKeys'] = $classAnnotation->primaryKeys;
             $classMetadata->table['defaultTtl'] = $classAnnotation->defaultTtl;
             $classMetadata->table['ifNoExist'] = $classAnnotation->ifNoExist;
+            $classMetadata->table['tableOptions'] = $classAnnotation->tableOptions;
         }
 
         // Save the field mapping to metadata

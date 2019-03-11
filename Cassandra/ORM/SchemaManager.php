@@ -19,10 +19,10 @@ class SchemaManager
         $this->connection->execute($statement);
     }
 
-    public function createTable($name, $fields, $primaryKeyFields = [])
+    public function createTable($name, $fields, $primaryKeyFields = [], $tableOptions = [])
     {
         $fieldsWithType = array_map(function ($field) { return $field['columnName'].' '.$field['type']; }, $fields);
-        $primaryKeyCQL = '';
+        $primaryKeyCQL = $tableOptionsCQL = '';
         if (count($primaryKeyFields) > 0) {
             $partitionKey = $primaryKeyFields[0];
             // if there is composite partition key
@@ -32,7 +32,22 @@ class SchemaManager
             $primaryKeyCQL = sprintf(',PRIMARY KEY (%s)', implode(',', $primaryKeyFields));
         }
 
-        $this->_exec(sprintf('CREATE TABLE %s (%s%s);', $name, implode(',', $fieldsWithType), $primaryKeyCQL));
+        if (!empty($tableOptions)) {
+			$tableOptionsParamCQL = [];
+			if (isset($tableOptions['compactStorage']) && false !== $tableOptions['compactStorage']) {
+				$tableOptionsParamCQL[] = 'COMPACT STORAGE';
+			}
+
+			if (isset($tableOptions['clusteringOrder']) && !is_null($tableOptions['clusteringOrder'])) {
+				$tableOptionsParamCQL[] = sprintf('CLUSTERING ORDER BY (%s)', $tableOptions['clusteringOrder']);
+			}
+
+			if (!empty($tableOptionsParamCQL)) {
+				$tableOptionsCQL = sprintf(' WITH %s', implode(' AND ', $tableOptionsParamCQL));
+			}
+		}
+
+        $this->_exec(sprintf('CREATE TABLE %s (%s%s)%s;', $name, implode(',', $fieldsWithType), $primaryKeyCQL, $tableOptionsCQL));
     }
 
     public function dropTable($name)
