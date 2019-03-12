@@ -21,7 +21,9 @@ class SchemaManager
 
     public function createTable($name, $fields, $primaryKeyFields = [], $tableOptions = [])
     {
-        $fieldsWithType = array_map(function ($field) { return $field['columnName'].' '.$field['type']; }, $fields);
+        $fieldsWithType = array_map(function ($field) {
+            return $field['columnName'] . ' ' . $field['type'];
+        }, $fields);
         $primaryKeyCQL = $tableOptionsCQL = '';
         if (count($primaryKeyFields) > 0) {
             $partitionKey = $primaryKeyFields[0];
@@ -33,19 +35,19 @@ class SchemaManager
         }
 
         if (!empty($tableOptions)) {
-			$tableOptionsParamCQL = [];
-			if (isset($tableOptions['compactStorage']) && false !== $tableOptions['compactStorage']) {
-				$tableOptionsParamCQL[] = 'COMPACT STORAGE';
-			}
+            $tableOptionsParamCQL = [];
+            if (isset($tableOptions['compactStorage']) && false !== $tableOptions['compactStorage']) {
+                $tableOptionsParamCQL[] = 'COMPACT STORAGE';
+            }
 
-			if (isset($tableOptions['clusteringOrder']) && !is_null($tableOptions['clusteringOrder'])) {
-				$tableOptionsParamCQL[] = sprintf('CLUSTERING ORDER BY (%s)', $tableOptions['clusteringOrder']);
-			}
+            if (isset($tableOptions['clusteringOrder']) && !is_null($tableOptions['clusteringOrder'])) {
+                $tableOptionsParamCQL[] = sprintf('CLUSTERING ORDER BY (%s)', $tableOptions['clusteringOrder']);
+            }
 
-			if (!empty($tableOptionsParamCQL)) {
-				$tableOptionsCQL = sprintf(' WITH %s', implode(' AND ', $tableOptionsParamCQL));
-			}
-		}
+            if (!empty($tableOptionsParamCQL)) {
+                $tableOptionsCQL = sprintf(' WITH %s', implode(' AND ', $tableOptionsParamCQL));
+            }
+        }
 
         $this->_exec(sprintf('CREATE TABLE %s (%s%s)%s;', $name, implode(',', $fieldsWithType), $primaryKeyCQL, $tableOptionsCQL));
     }

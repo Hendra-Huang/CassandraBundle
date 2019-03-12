@@ -19,13 +19,13 @@ class SchemaCreate
         $schemaManager = $em->getSchemaManager();
 
         // Get all files in src/*/Entity directories
-        $path = $this->container->getParameter('kernel.root_dir').'/../src';
+        $path = $this->container->getParameter('kernel.root_dir') . '/../src';
         $iterator = new \RegexIterator(
             new \RecursiveIteratorIterator(
                 new \RecursiveDirectoryIterator($path, \FilesystemIterator::SKIP_DOTS),
                 \RecursiveIteratorIterator::LEAVES_ONLY
             ),
-            '/^.+'.preg_quote('.php').'$/i',
+            '/^.+' . preg_quote('.php') . '$/i',
             \RecursiveRegexIterator::GET_MATCH
         );
         foreach ($iterator as $file) {
