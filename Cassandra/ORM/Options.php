@@ -1,9 +1,9 @@
 <?php
+
 namespace CassandraBundle\Cassandra\ORM;
 
 /**
- * Class Options
- * @package CassandraBundle\Cassandra\ORM
+ * Class Options.
  */
 class Options
 {
@@ -26,11 +26,13 @@ class Options
 
     /**
      * @param int $ttl
+     *
      * @return Options
      */
     public function setTtl($ttl)
     {
         $this->ttl = $ttl;
+
         return $this;
     }
 
@@ -44,11 +46,13 @@ class Options
 
     /**
      * @param bool $ifNoExist
+     *
      * @return Options
      */
     public function setIfNoExist($ifNoExist)
     {
         $this->ifNoExist = $ifNoExist;
+
         return $this;
     }
 }

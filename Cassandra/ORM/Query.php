@@ -2,7 +2,6 @@
 
 namespace CassandraBundle\Cassandra\ORM;
 
-use CassandraBundle\Cassandra\ORM\EntityManagerInterface;
 use CassandraBundle\Cassandra\Utility\Type as CassandraType;
 
 class Query
@@ -82,7 +81,7 @@ class Query
     {
         $statement = $this->_em->prepare($this->cql);
         $arguments = null;
-        if (count($this->parameters) > 0) {
+        if (\count($this->parameters) > 0) {
             $arguments = $this->_em->prepareArguments($this->parameters);
         }
 

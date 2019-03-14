@@ -12,8 +12,8 @@ interface RepositoryFactory
     /**
      * Gets the repository for an entity class.
      *
-     * @param \CassandraBundle\Cassandra\ORM\EntityManagerInterface $entityManager The EntityManager instance.
-     * @param string                                                $entityName    The name of the entity.
+     * @param \CassandraBundle\Cassandra\ORM\EntityManagerInterface $entityManager the EntityManager instance
+     * @param string                                                $entityName    the name of the entity
      *
      * @return \Doctrine\Common\Persistence\ObjectRepository
      */

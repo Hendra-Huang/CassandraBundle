@@ -23,13 +23,13 @@ class Type
     {
         $str = preg_replace('/[^a-f0-9]/is', '', $uuid); // delete non hexadecimal
 
-        if (strlen($str) !== (self::UUID_LENGTH * 2)) {
+        if (\strlen($str) !== (self::UUID_LENGTH * 2)) {
             return;
         }
 
         $bin = pack('H*', $str);
 
-        if (ord($bin[6]) >> 4 == 1) {
+        if (1 == \ord($bin[6]) >> 4) {
             // Restore contiguous big-endian byte order
             $time = bin2hex($bin[6].$bin[7].$bin[4].$bin[5].$bin[0].$bin[1].$bin[2].$bin[3]);
 

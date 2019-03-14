@@ -22,13 +22,13 @@ class SchemaManager
     public function createTable($name, $fields, $primaryKeyFields = [], $tableOptions = [])
     {
         $fieldsWithType = array_map(function ($field) {
-            return $field['columnName'] . ' ' . $field['type'];
+            return $field['columnName'].' '.$field['type'];
         }, $fields);
         $primaryKeyCQL = $tableOptionsCQL = '';
-        if (count($primaryKeyFields) > 0) {
+        if (\count($primaryKeyFields) > 0) {
             $partitionKey = $primaryKeyFields[0];
             // if there is composite partition key
-            if (is_array($partitionKey) && count($partitionKey) > 1) {
+            if (\is_array($partitionKey) && \count($partitionKey) > 1) {
                 $primaryKeyFields[0] = sprintf('(%s)', implode(',', $partitionKey));
             }
             $primaryKeyCQL = sprintf(',PRIMARY KEY (%s)', implode(',', $primaryKeyFields));
@@ -40,7 +40,7 @@ class SchemaManager
                 $tableOptionsParamCQL[] = 'COMPACT STORAGE';
             }
 
-            if (isset($tableOptions['clusteringOrder']) && !is_null($tableOptions['clusteringOrder'])) {
+            if (isset($tableOptions['clusteringOrder']) && null !== $tableOptions['clusteringOrder']) {
                 $tableOptionsParamCQL[] = sprintf('CLUSTERING ORDER BY (%s)', $tableOptions['clusteringOrder']);
             }
 

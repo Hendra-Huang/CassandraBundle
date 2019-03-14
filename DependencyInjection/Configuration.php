@@ -32,7 +32,7 @@ class Configuration implements ConfigurationInterface
                     ->prototype('array')
                         ->beforeNormalization()
                             ->ifTrue(function ($v) {
-                                return (array_key_exists('load_balancing', $v) &&   $v['load_balancing'] === 'dc-aware-round-robin') && !array_key_exists('dc_options', $v);
+                                return (\array_key_exists('load_balancing', $v) && 'dc-aware-round-robin' === $v['load_balancing']) && !\array_key_exists('dc_options', $v);
                             })
                             ->thenInvalid('"dc-aware-round-robin" load balancing option require a "dc_options" entry in your configuration')
                         ->end()
@@ -95,7 +95,7 @@ class Configuration implements ConfigurationInterface
     }
 
     /**
-     * Return a ORM configuration
+     * Return a ORM configuration.
      *
      * @param ArrayNodeDefinition $rootNode
      */
@@ -109,7 +109,7 @@ class Configuration implements ConfigurationInterface
                             ->requiresAtLeastOneElement()
                             ->useAttributeAsKey('name')
                             ->prototype('array')
-                                ->treatNullLike(array())
+                                ->treatNullLike([])
                                 ->performNoDeepMerging()
                                 ->children()
                                     ->scalarNode('prefix')->isRequired()->end()
@@ -120,6 +120,5 @@ class Configuration implements ConfigurationInterface
                     ->end()
                 ->end()
             ->end();
-        ;
     }
 }

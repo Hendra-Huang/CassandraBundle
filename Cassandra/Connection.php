@@ -126,7 +126,7 @@ class Connection
      */
     public function getSession()
     {
-        if (is_null($this->session)) {
+        if (null === $this->session) {
             $this->session = $this->cluster->connect($this->getKeyspace());
         }
 
@@ -256,7 +256,7 @@ class Connection
      */
     protected function prepareResponse($response, CassandraEvent $event = null)
     {
-        if (is_null($event)) {
+        if (null === $event) {
             return $response;
         }
 
@@ -280,7 +280,7 @@ class Connection
      */
     protected function prepareEvent($command, array $args)
     {
-        if (is_null($this->getEventDispatcher())) {
+        if (null === $this->getEventDispatcher()) {
             return;
         }
 
@@ -306,14 +306,14 @@ class Connection
         $event = $this->prepareEvent($command, $arguments);
 
         // The last arguments of call_user_func_array must not be null
-        if (end($arguments) === null) {
+        if (null === end($arguments)) {
             array_pop($arguments);
         }
 
         $retry = $this->getMaxRetry();
         while ($retry >= 0) {
             try {
-                $return = call_user_func_array([$this->getSession(), $command], $arguments);
+                $return = \call_user_func_array([$this->getSession(), $command], $arguments);
 
                 // No exception, we can return the result
                 $retry = -1;

@@ -38,7 +38,7 @@ class SchemaManager extends test
                 ],
                 ['id'],
                 ['compactStorage' => true],
-                'CREATE TABLE test (id uuid,name text,PRIMARY KEY (id)) WITH COMPACT STORAGE;'
+                'CREATE TABLE test (id uuid,name text,PRIMARY KEY (id)) WITH COMPACT STORAGE;',
             ],
             [
                 'test',
@@ -50,7 +50,7 @@ class SchemaManager extends test
                 ],
                 ['id', 'date'],
                 [],
-                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date));'
+                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date));',
             ],
             [
                 'test',
@@ -62,7 +62,7 @@ class SchemaManager extends test
                 ],
                 ['id', 'date'],
                 ['clusteringOrder' => 'date DESC'],
-                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH CLUSTERING ORDER BY (date DESC);'
+                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH CLUSTERING ORDER BY (date DESC);',
             ],
             [
                 'test',
@@ -74,7 +74,7 @@ class SchemaManager extends test
                 ],
                 ['id', 'date'],
                 ['compactStorage' => true, 'clusteringOrder' => 'date DESC'],
-                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH COMPACT STORAGE AND CLUSTERING ORDER BY (date DESC);'
+                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH COMPACT STORAGE AND CLUSTERING ORDER BY (date DESC);',
             ],
         ];
     }
@@ -90,6 +90,7 @@ class SchemaManager extends test
                 'retries' => ['sync_requests' => 1],
             ]
         );
+
         return $mockConnection;
     }
 

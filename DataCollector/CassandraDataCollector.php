@@ -107,7 +107,7 @@ class CassandraDataCollector extends DataCollector
     {
         $totalExecutionTime = $this->getTotalExecutionTime();
 
-        return ($totalExecutionTime) ? ($totalExecutionTime / count($this->getCommands())) : 0;
+        return ($totalExecutionTime) ? ($totalExecutionTime / \count($this->getCommands())) : 0;
     }
 
     /**
@@ -121,7 +121,7 @@ class CassandraDataCollector extends DataCollector
     {
         $arguments = $event->getArguments();
 
-        if (is_object($arguments[0])) {
+        if (\is_object($arguments[0])) {
             return 'Statement';
         }
 
@@ -169,7 +169,7 @@ class CassandraDataCollector extends DataCollector
      */
     protected static function getConsistency($intval)
     {
-        if (array_key_exists($intval, self::$consistency)) {
+        if (\array_key_exists($intval, self::$consistency)) {
             return self::$consistency[$intval];
         }
 

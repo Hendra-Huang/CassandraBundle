@@ -199,7 +199,7 @@ class CassandraExtension extends test
      */
     public function testUnexpectedValueConfig($configs)
     {
-        $parameterBag = new ParameterBag(array('kernel.debug' => true));
+        $parameterBag = new ParameterBag(['kernel.debug' => true]);
         $container = new ContainerBuilder($parameterBag);
 
         $this->if($extension = new TestedClass())
@@ -220,7 +220,7 @@ class CassandraExtension extends test
             ],
         ]];
 
-        $parameterBag = new ParameterBag(array('kernel.debug' => true));
+        $parameterBag = new ParameterBag(['kernel.debug' => true]);
         $container = new ContainerBuilder($parameterBag);
 
         $this->if($extension = new TestedClass())
@@ -268,7 +268,7 @@ class CassandraExtension extends test
     {
         $extension = new TestedClass();
 
-        $parameterBag = new ParameterBag(array('kernel.debug' => true));
+        $parameterBag = new ParameterBag(['kernel.debug' => true]);
         $container = new ContainerBuilder($parameterBag);
         $container->set('event_dispatcher', new \mock\Symfony\Component\EventDispatcher\EventDispatcherInterface());
         $container->set('logger', new \mock\Psr\Log\LoggerInterface());

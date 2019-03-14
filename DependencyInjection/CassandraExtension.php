@@ -42,7 +42,7 @@ class CassandraExtension extends Extension
     protected function metadataFactoryLoad(ContainerBuilder $container, array $config)
     {
         $classMetadataFactoryDefinition = $container
-            ->register('cassandra.factory.metadata', "CassandraBundle\\Cassandra\\ORM\\Mapping\\ClassMetadataFactory")
+            ->register('cassandra.factory.metadata', 'CassandraBundle\\Cassandra\\ORM\\Mapping\\ClassMetadataFactory')
             ->addArgument(isset($config['mappings']) ? $config['mappings'] : [])
             ->addArgument(new Reference('annotation_reader'))
             ->setPublic(false);
@@ -63,6 +63,7 @@ class CassandraExtension extends Extension
         if ($config['dispatch_events']) {
             $definition->addMethodCall('setEventDispatcher', [new Reference('event_dispatcher')]);
         }
+        $definition->setPublic(true);
 
         $container->setDefinition(sprintf('cassandra.connection.%s', $connectionId), $definition);
 

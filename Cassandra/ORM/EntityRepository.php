@@ -34,8 +34,8 @@ class EntityRepository
     /**
      * Initializes a new <tt>EntityRepository</tt>.
      *
-     * @param EntityManager         $em    The EntityManager to use.
-     * @param Mapping\ClassMetadata $class The class descriptor.
+     * @param EntityManager         $em    the EntityManager to use
+     * @param Mapping\ClassMetadata $class the class descriptor
      */
     public function __construct($em, Mapping\ClassMetadata $class)
     {

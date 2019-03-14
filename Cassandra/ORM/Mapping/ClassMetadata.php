@@ -37,7 +37,7 @@ class ClassMetadata
      *
      * @var array
      */
-    public $fieldMappings = array();
+    public $fieldMappings = [];
 
     /**
      * READ-ONLY: An array of field names. Used to look up field names from column names.
@@ -46,7 +46,7 @@ class ClassMetadata
      *
      * @var array
      */
-    public $fieldNames = array();
+    public $fieldNames = [];
 
     /**
      * READ-ONLY: The primary table definition. The definition is an array with the
@@ -63,7 +63,7 @@ class ClassMetadata
     /**
      * Creates a string representation of this instance.
      *
-     * @return string The string representation of this instance.
+     * @return string the string representation of this instance
      *
      * @todo Construct meaningful string representation.
      */

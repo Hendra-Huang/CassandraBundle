@@ -14,7 +14,7 @@ final class DefaultRepositoryFactory implements RepositoryFactory
      *
      * @var \Doctrine\Common\Persistence\ObjectRepository[]
      */
-    private $repositoryList = array();
+    private $repositoryList = [];
 
     /**
      * {@inheritdoc}
@@ -33,8 +33,8 @@ final class DefaultRepositoryFactory implements RepositoryFactory
     /**
      * Create a new repository instance for an entity class.
      *
-     * @param \Doctrine\ORM\EntityManagerInterface $entityManager The EntityManager instance.
-     * @param string                               $entityName    The name of the entity.
+     * @param \Doctrine\ORM\EntityManagerInterface $entityManager the EntityManager instance
+     * @param string                               $entityName    the name of the entity
      *
      * @return \Doctrine\Common\Persistence\ObjectRepository
      */

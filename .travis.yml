@@ -1,24 +1,33 @@
 language: php
 
-php:
-  - 5.5
+dist: xenial
+addons:
+  apt:
+    packages:
+    - build-essential
+    - cmake
+    - libpcre3-dev
+    - libgmp-dev
+    - libssl-dev
 
-branches:
-  only:
-    - master
+php:
+  - 7.1.19
 
 before_install:
-  # PPA for libuv-dev
-  - sudo apt-add-repository ppa:linuxjedi/ppa -y
-  - sudo apt-get update
-  - sudo apt-get install -y libuv-dev libssl-dev
-  - cd /tmp && git clone https://github.com/datastax/php-driver.git && cd php-driver && git submodule update --init
-  - cd ext && ./install.sh && cd "$TRAVIS_BUILD_DIR"
-  - echo "extension=cassandra.so" >> `php --ini | grep "Loaded Configuration" | sed -e "s|.*:\s*||"`
+  # Cassandra Dependencies
+  - wget http://downloads.datastax.com/cpp-driver/ubuntu/16.04/dependencies/libuv/v1.24.0/libuv1_1.24.0-1_amd64.deb && sudo dpkg -i libuv1_1.24.0-1_amd64.deb
+  - wget http://downloads.datastax.com/cpp-driver/ubuntu/16.04/dependencies/libuv/v1.24.0/libuv1-dev_1.24.0-1_amd64.deb && sudo dpkg -i libuv1-dev_1.24.0-1_amd64.deb
+  - wget http://downloads.datastax.com/cpp-driver/ubuntu/16.04/cassandra/v2.11.0/cassandra-cpp-driver_2.11.0-1_amd64.deb && sudo dpkg -i cassandra-cpp-driver_2.11.0-1_amd64.deb
+  - wget http://downloads.datastax.com/cpp-driver/ubuntu/16.04/cassandra/v2.11.0/cassandra-cpp-driver-dev_2.11.0-1_amd64.deb && sudo dpkg -i cassandra-cpp-driver-dev_2.11.0-1_amd64.deb
+  - pecl channel-update pecl.php.net && pecl install cassandra
+  # PHP-cs-fixer
+  - composer global require --dev 'friendsofphp/php-cs-fixer'
+  - export PATH="$PATH:$HOME/.config/composer/vendor/bin:$HOME/.composer/vendor/bin"
 
 install:
-  - composer install -n --dev
+  - composer install --prefer-dist -n -o
 
 script:
-  - bin/atoum
+  - php-cs-fixer fix --dry-run --diff --no-ansi
+  - vendor/bin/atoum
 

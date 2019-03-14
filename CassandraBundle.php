@@ -10,7 +10,7 @@ use Symfony\Component\HttpKernel\Bundle\Bundle;
 class CassandraBundle extends Bundle
 {
     /**
-     * @return DependencyInjection\CassandraExtension|null|\Symfony\Component\DependencyInjection\Extension\ExtensionInterface
+     * @return DependencyInjection\CassandraExtension|\Symfony\Component\DependencyInjection\Extension\ExtensionInterface|null
      */
     public function getContainerExtension()
     {

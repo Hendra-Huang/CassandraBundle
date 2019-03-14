@@ -46,8 +46,6 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
      * Sets the cache driver used by the factory to cache ClassMetadata instances.
      *
      * @param \Doctrine\Common\Cache\Cache $cacheDriver
-     *
-     * @return void
      */
     public function setCacheDriver(Cache $cacheDriver = null)
     {
@@ -77,7 +75,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
     /**
      * Loads the metadata of the class in question.
      *
-     * @param string $name The name of the class for which the metadata should get loaded.
+     * @param string $name the name of the class for which the metadata should get loaded
      *
      * @return array
      */
@@ -94,7 +92,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
     /**
      * Gets the class metadata descriptor for a class.
      *
-     * @param string $className The name of the class.
+     * @param string $className the name of the class
      *
      * @return ClassMetadata
      *
@@ -108,7 +106,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
         }
 
         // Check for namespace alias
-        if (strpos($className, ':') !== false) {
+        if (false !== strpos($className, ':')) {
             list($namespaceAlias, $simpleClassName) = explode(':', $className, 2);
 
             $realClassName = $this->getFqcnFromAlias($namespaceAlias, $simpleClassName);
@@ -122,12 +120,12 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
         }
 
         if ($this->cacheDriver) {
-            if (($cached = $this->cacheDriver->fetch($realClassName . $this->cacheSalt)) !== false) {
+            if (false !== ($cached = $this->cacheDriver->fetch($realClassName.$this->cacheSalt))) {
                 $this->loadedMetadata[$realClassName] = $cached;
             } else {
                 $loadedClassName = $this->loadMetadata($realClassName);
                 $this->cacheDriver->save(
-                    $loadedClassName . $this->cacheSalt,
+                    $loadedClassName.$this->cacheSalt,
                     $this->loadedMetadata[$loadedClassName],
                     null
                 );
@@ -149,7 +147,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
      *
      * @param string $className
      *
-     * @return bool TRUE if the metadata of the class in question is already loaded, FALSE otherwise.
+     * @return bool TRUE if the metadata of the class in question is already loaded, FALSE otherwise
      */
     public function hasMetadataFor($className)
     {
@@ -161,7 +159,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
      *
      * NOTE: This is only useful in very special cases, like when generating proxy classes.
      *
-     * @param string $className
+     * @param string        $className
      * @param ClassMetadata $class
      */
     public function setMetadataFor($className, $class)
@@ -220,7 +218,7 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
      */
     private function getShortName($className)
     {
-        if (strpos($className, '\\') === false) {
+        if (false === strpos($className, '\\')) {
             return strtolower($className);
         }
 
@@ -234,13 +232,13 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
      */
     protected function getFqcnFromAlias($namespaceAlias, $simpleClassName)
     {
-        if (count($this->mappingsConfig) <= 0) {
-            return $namespaceAlias . "\\Entity\\" . $simpleClassName;
+        if (\count($this->mappingsConfig) <= 0) {
+            return $namespaceAlias.'\\Entity\\'.$simpleClassName;
         }
 
         foreach ($this->mappingsConfig as $name => $config) {
             if ($namespaceAlias == $name) {
-                return $config['prefix'] . "\\" . $simpleClassName;
+                return $config['prefix'].'\\'.$simpleClassName;
             }
         }
     }

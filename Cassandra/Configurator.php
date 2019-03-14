@@ -21,7 +21,7 @@ class Configurator
     {
         $config = $connection->getConfig();
 
-        $consistency = constant('\Cassandra::CONSISTENCY_'.strtoupper($config['default_consistency']));
+        $consistency = \constant('\Cassandra::CONSISTENCY_'.strtoupper($config['default_consistency']));
 
         $cluster = new Builder();
         $cluster
@@ -36,17 +36,17 @@ class Configurator
             ->withCredentials($config['user'], $config['password'])
             ->withProtocolVersion($config['protocol_version']);
 
-        if (isset($config['ssl']) && $config['ssl'] === true) {
+        if (isset($config['ssl']) && true === $config['ssl']) {
             $ssl = new SSLOptionsBuilder();
             $sslOption = $ssl->withVerifyFlags(\Cassandra::VERIFY_NONE)->build();
             $cluster->withSSL($sslOption);
         }
 
-        if (array_key_exists('default_timeout', $config)) {
+        if (\array_key_exists('default_timeout', $config)) {
             $cluster->withDefaultTimeout($config['default_timeout']);
         }
 
-        if ($config['load_balancing'] == 'round-robin') {
+        if ('round-robin' == $config['load_balancing']) {
             $cluster->withRoundRobinLoadBalancingPolicy();
         } else {
             $dcOption = $config['dc_options'];
