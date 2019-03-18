@@ -38,6 +38,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                         ->children()
                             ->booleanNode('persistent_sessions')->defaultValue(true)->end()
+                            ->scalarNode('entity_group_prefix_folder')->isRequired()->defaultValue('')->end()
                             ->scalarNode('keyspace')->isRequired()->cannotBeEmpty()->end()
                             ->scalarNode('load_balancing')
                                 ->defaultValue('round-robin')
