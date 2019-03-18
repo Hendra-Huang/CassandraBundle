@@ -175,7 +175,7 @@ class CassandraExtension extends test
             ->boolean($container->has('cassandra.connection.client_test2'))
                 ->isTrue()
             ->array($arguments2 = $container->getDefinition('cassandra.connection.client_test2')->getArgument(0))
-                ->hasSize(16)
+                ->hasSize(17)
                 ->hasKeys($this->getDefaultConfigKeys(['dc_options']))
             ->boolean($arguments['dispatch_events'])
                 ->isTrue()
