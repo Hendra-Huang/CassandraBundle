@@ -19,6 +19,9 @@ class SchemaCreate
         $entityDirectoriesRegexp = '/src\/.*Entity\//';
         $entityDirectories = $em->getTargetedEntityDirectories();
         if (!empty($entityDirectories)) {
+            $entityDirectories = array_map(function($entityDirectory) {
+                return str_replace('/', '\/', $entityDirectory);
+            }, $entityDirectories);
             $entityDirectoriesRegexp = sprintf('/((%s))/', implode('),', $entityDirectories));
         }
 
