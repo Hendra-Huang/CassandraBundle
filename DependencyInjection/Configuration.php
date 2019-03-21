@@ -2,9 +2,11 @@
 
 namespace CassandraBundle\DependencyInjection;
 
+use CassandraBundle\Cassandra\ORM\EntityManager;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
 use Symfony\Component\Config\Definition\Builder\TreeBuilder;
 use Symfony\Component\Config\Definition\ConfigurationInterface;
+use Symfony\Component\DependencyInjection\Exception\LogicException;
 
 /**
  * This is the class that validates and merges configuration from your app/config files.
@@ -104,6 +106,37 @@ class Configuration implements ConfigurationInterface
         $rootNode
             ->children()
                 ->arrayNode('orm')
+                    ->beforeNormalization()
+                    ->ifTrue(static function ($v) {
+                        if (! empty($v) && ! class_exists(EntityManager::class)) {
+                            throw new LogicException('The cassandra/orm package is required when the cassandra.orm config is set.');
+                        }
+
+                        return $v === null || (is_array($v) && ! array_key_exists('entity_managers', $v) && ! array_key_exists('entity_manager', $v));
+                    })
+                    ->then(static function ($v) {
+                        $v = (array) $v;
+                        // Key that should not be rewritten to the connection config
+                        $excludedKeys  = [
+                            'default_entity_manager' => true,
+                            'mappings' => true,
+                            'metadata_cache_driver' => true,
+                        ];
+                        $entityManager = [];
+                        foreach ($v as $key => $value) {
+                            var_dump($key);
+                            if (isset($excludedKeys[$key])) {
+                                continue;
+                            }
+                            $entityManager[$key] = $v[$key];
+                            unset($v[$key]);
+                        }
+                        $v['default_entity_manager'] = isset($v['default_entity_manager']) ? (string) $v['default_entity_manager'] : 'default';
+                        $v['entity_managers']        = [$v['default_entity_manager'] => $entityManager];
+
+                        return $v;
+                    })
+                    ->end()
                     ->children()
                         ->arrayNode('mappings')
                             ->requiresAtLeastOneElement()
@@ -117,6 +150,7 @@ class Configuration implements ConfigurationInterface
                             ->end()
                         ->end()
                         ->scalarNode('metadata_cache_driver')->defaultNull()->end()
+                        ->scalarNode('default_entity_manager')->end()
                         ->arrayNode('entity_managers')
                             ->requiresAtLeastOneElement()
                             ->useAttributeAsKey('name')
@@ -142,11 +176,7 @@ class Configuration implements ConfigurationInterface
                                             ->performNoDeepMerging()
                                             ->children()
                                                 ->scalarNode('mapping')->defaultValue(true)->end()
-                                                ->scalarNode('type')->end()
                                                 ->scalarNode('dir')->end()
-                                                ->scalarNode('alias')->end()
-                                                ->scalarNode('prefix')->end()
-                                                ->booleanNode('is_bundle')->end()
                                             ->end()
                                         ->end()
                                     ->end()

@@ -20,3 +20,8 @@ cassandra:
         - 127.0.0.5
       user: 'usertest'
       password: 'passwdtest'
+  orm:
+    default_entity_manager: client_test
+    entity_managers:
+      client_test:
+        connection: client_test

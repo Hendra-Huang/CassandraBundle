@@ -26,3 +26,8 @@ cassandra:
         request: 15
       retries:
         sync_requests: 1
+  orm:
+    default_entity_manager: client_test
+    entity_managers:
+      client_test:
+        connection: client_test

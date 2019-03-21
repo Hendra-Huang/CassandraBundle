@@ -1,0 +1,30 @@
+cassandra:
+  connections:
+    client_one:
+      keyspace: 'test1'
+      hosts:
+        - '127.0.0.1'
+        - '127.0.0.2'
+        - '127.0.0.3'
+      protocol_version: 3
+      user: ''
+      password: ''
+    client_two:
+      keyspace: 'test2'
+      hosts:
+        - '127.0.0.1'
+        - '127.0.0.2'
+        - '127.0.0.3'
+      protocol_version: 3
+      user: ''
+      password: ''
+  orm:
+    default_entity_manager: client_one
+    entity_managers:
+      client_one:
+        connection: client_one
+        mappings:
+          TestOne:
+            dir: 'src/Entity/TestOne'
+          TestTwo:
+            dir: 'src/Entity/TestTwo'

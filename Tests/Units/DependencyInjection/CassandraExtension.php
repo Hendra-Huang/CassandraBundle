@@ -13,14 +13,14 @@ class CassandraExtension extends test
 {
     public function testDefaultConfig()
     {
-        $container = $this->getContainerForConfiguation('default-config');
+        $container = $this->getContainerForConfiguration('default-config');
         $container->compile();
 
         $this
             ->boolean($container->has('cassandra.connection.client_test'))
                 ->isTrue()
             ->array($arguments = $container->getDefinition('cassandra.connection.client_test')->getArgument(0))
-                ->hasSize(16)
+                ->hasSize(15)
                 ->hasKeys($this->getDefaultConfigKeys())
                 ->notHasKeys(['default_timeout'])
             ->boolean($arguments['dispatch_events'])
@@ -65,14 +65,14 @@ class CassandraExtension extends test
 
     public function testOverrideConfig()
     {
-        $container = $this->getContainerForConfiguation('override-config');
+        $container = $this->getContainerForConfiguration('override-config');
         $container->compile();
 
         $this
             ->boolean($container->has('cassandra.connection.client_test'))
                 ->isTrue()
             ->array($arguments = $container->getDefinition('cassandra.connection.client_test')->getArgument(0))
-                ->hasSize(18)
+                ->hasSize(17)
                 ->hasKeys($this->getDefaultConfigKeys(['default_timeout', 'dc_options']))
             ->boolean($arguments['dispatch_events'])
                 ->isFalse()
@@ -131,7 +131,7 @@ class CassandraExtension extends test
 
     public function testOverrideDefaultEndPointsConfig()
     {
-        $container = $this->getContainerForConfiguation('override-config-with-import');
+        $container = $this->getContainerForConfiguration('override-config-with-import');
         $container->compile();
 
         $this
@@ -151,14 +151,14 @@ class CassandraExtension extends test
 
     public function testMulticlientsConfig()
     {
-        $container = $this->getContainerForConfiguation('multiclients');
+        $container = $this->getContainerForConfiguration('multiclients');
         $container->compile();
 
         $this
             ->boolean($container->has('cassandra.connection.client_test'))
                 ->isTrue()
             ->array($arguments = $container->getDefinition('cassandra.connection.client_test')->getArgument(0))
-                ->hasSize(16)
+                ->hasSize(15)
                 ->hasKeys($this->getDefaultConfigKeys())
             ->boolean($arguments['dispatch_events'])
                 ->isTrue()
@@ -175,7 +175,7 @@ class CassandraExtension extends test
             ->boolean($container->has('cassandra.connection.client_test2'))
                 ->isTrue()
             ->array($arguments2 = $container->getDefinition('cassandra.connection.client_test2')->getArgument(0))
-                ->hasSize(17)
+                ->hasSize(16)
                 ->hasKeys($this->getDefaultConfigKeys(['dc_options']))
             ->boolean($arguments['dispatch_events'])
                 ->isTrue()
@@ -232,7 +232,7 @@ class CassandraExtension extends test
 
     public function testConfigurator()
     {
-        $container = $this->getContainerForConfiguation('default-config');
+        $container = $this->getContainerForConfiguration('default-config');
         $container->compile();
 
         $this
@@ -240,6 +240,23 @@ class CassandraExtension extends test
                 ->isInstanceOf('CassandraBundle\Cassandra\Connection')
             ->object($client->getCluster())
                 ->isInstanceOf('Cassandra\DefaultCluster');
+    }
+
+    public function testOrmConfig()
+    {
+        $container = $this->getContainerForConfiguration('em-config');
+        $container->compile();
+
+        $this
+            ->object($connection = $container->get('cassandra.connection.client_one'))
+            ->isInstanceOf('CassandraBundle\Cassandra\Connection')
+            ->object($connection->getCluster())
+            ->isInstanceOf('Cassandra\DefaultCluster')
+            ->object($em = $container->get('cassandra.client_one_entity_manager'))
+            ->isInstanceOf('CassandraBundle\Cassandra\ORM\EntityManager')
+            ->array($em->getTargetedEntityDirectories())
+            ->isNotEmpty()
+            ->hasKeys(array('TestOne', 'TestTwo'));
     }
 
     protected function unexpectedConfigValueDataProvider()
@@ -264,7 +281,7 @@ class CassandraExtension extends test
         ];
     }
 
-    protected function getContainerForConfiguation($fixtureName)
+    protected function getContainerForConfiguration($fixtureName)
     {
         $extension = new TestedClass();
 

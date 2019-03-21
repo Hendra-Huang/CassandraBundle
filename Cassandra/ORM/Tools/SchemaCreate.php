@@ -16,10 +16,10 @@ class SchemaCreate
         $em = $this->container->get(sprintf('cassandra.%s_entity_manager', $connection));
         $schemaManager = $em->getSchemaManager();
 
-        $connectionConfig = $em->getConnection()->getConfig();
-        $entityPrefixFolder = '';
-        if ($connectionConfig && isset($connectionConfig['entity_group_prefix_folder'])) {
-            $entityPrefixFolder = $connectionConfig['entity_group_prefix_folder'];
+        $entityDirectoriesRegexp = '/src\/.*Entity\//';
+        $entityDirectories = $em->getTargetedEntityDirectories();
+        if (!empty($entityDirectories)) {
+            $entityDirectoriesRegexp = sprintf('/((%s))/', implode('),', $entityDirectories));
         }
 
         // Get all files in src/*/Entity directories
@@ -37,7 +37,7 @@ class SchemaCreate
             if (!preg_match('(^phar:)i', $sourceFile)) {
                 $sourceFile = realpath($sourceFile);
             }
-            if (preg_match(sprintf('/src\/.*%sEntity\//', $entityPrefixFolder), $sourceFile)) {
+            if (preg_match($entityDirectoriesRegexp, $sourceFile)) {
                 $className = str_replace('/', '\\', preg_replace('/(.*src\/)(.*).php/', '$2', $sourceFile));
                 $metadata = $em->getClassMetadata($className);
                 $tableName = $metadata->table['name'];

@@ -23,17 +23,32 @@ class EntityManager implements Session, EntityManagerInterface
     private $repositoryFactory;
     private $schemaManager;
 
+    /** @var array */
+    private $config;
+
     const STATEMENT = 'statement';
     const ARGUMENTS = 'arguments';
 
-    public function __construct(Connection $connection, ClassMetadataFactoryInterface $metadataFactory, LoggerInterface $logger)
-    {
+    /**
+     * EntityManager constructor.
+     * @param Connection $connection
+     * @param ClassMetadataFactoryInterface $metadataFactory
+     * @param LoggerInterface $logger
+     * @param array $config
+     */
+    public function __construct(
+        Connection $connection,
+        ClassMetadataFactoryInterface $metadataFactory,
+        LoggerInterface $logger,
+        $config = []
+    ) {
         $this->connection = $connection;
         $this->logger = $logger;
         $this->metadataFactory = $metadataFactory;
         $this->schemaManager = new SchemaManager($connection);
         $this->repositoryFactory = new DefaultRepositoryFactory();
         $this->statements = [];
+        $this->config = $config;
     }
 
     public function getConnection()
@@ -54,6 +69,15 @@ class EntityManager implements Session, EntityManagerInterface
     public function getLogger()
     {
         return $this->logger;
+    }
+
+    public function getTargetedEntityDirectories()
+    {
+        $entityDirectories = [];
+        foreach ($this->config['mappings'] as $type => $mapping) {
+            $entityDirectories[$type] = isset($mapping['dir']) ? $mapping['dir'] : false;
+        }
+        return $entityDirectories;
     }
 
     /**
