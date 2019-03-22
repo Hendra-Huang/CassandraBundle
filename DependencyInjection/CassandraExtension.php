@@ -48,8 +48,8 @@ class CassandraExtension extends Extension
      * @param string $connectionId
      * @param string $defaultEmName
      * @param array  $emConfigs
-     * @return array
      *
+     * @return array
      */
     private function getEntityManagerConfiguration($connectionId, $defaultEmName, $emConfigs)
     {

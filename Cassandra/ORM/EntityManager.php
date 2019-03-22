@@ -30,12 +30,10 @@ class EntityManager implements Session, EntityManagerInterface
     const ARGUMENTS = 'arguments';
 
     /**
-     *
      * @param Connection                    $connection
      * @param ClassMetadataFactoryInterface $metadataFactory
      * @param LoggerInterface               $logger
      * @param array                         $config
-     *
      */
     public function __construct(
         Connection $connection,

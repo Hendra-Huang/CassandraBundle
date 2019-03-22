@@ -112,7 +112,7 @@ class Configuration implements ConfigurationInterface
                             throw new LogicException('The cassandra/orm package is required when the cassandra.orm config is set.');
                         }
 
-                        return $v === null || (is_array($v) && ! array_key_exists('entity_managers', $v) && ! array_key_exists('entity_manager', $v));
+                        return null === $v || (\is_array($v) && !\array_key_exists('entity_managers', $v) && !\array_key_exists('entity_manager', $v));
                     })
                     ->then(static function ($v) {
                         $v = (array) $v;
