@@ -182,6 +182,13 @@ Datacollector is available when the symfony profiler is enabled. The collector a
 
 **NOTE :** The time reported in the data collector may not be the real execution time in case you use the async calls : `executeAsync` and `prepareAsync`
 
+## EntityManager
+
+EntityManager is linked to one connection, so one keyspace in Cassandra.
+In the bundle, you can map some Entity folders to an entityManager to then create some tables (via the SchemaManager) a specific keyspace.
+There is a configuration parameter under ``orm`` called ``entity_managers`` where you can describe each ``entity_manager``.
+The entityManager config contains the linked connection and the entity mapping directories.
+
 ## Configuration reference
 
 ```yaml
@@ -213,6 +220,22 @@ cassandra:
                 sync_requests: 0          # Number of retries for synchronous requests. Default is 0, must be an integer if set
 
         client_name:
+            ...
+    orm:
+        entity_managers:
+            default:
+                connection: default
+                mappings:
+                    User:
+                        dir: "src/UserEntity"
+                    Preference:
+                        dir: "src/PreferenceEntity"
+            
+            client_name:
+                connection: client_name
+                mappings:
+                    EntityGroupOne:
+                        dir: "src/GroupOneEntity"
             ...
 ```
 
