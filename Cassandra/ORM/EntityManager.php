@@ -30,11 +30,12 @@ class EntityManager implements Session, EntityManagerInterface
     const ARGUMENTS = 'arguments';
 
     /**
-     * EntityManager constructor.
-     * @param Connection $connection
+     *
+     * @param Connection                    $connection
      * @param ClassMetadataFactoryInterface $metadataFactory
-     * @param LoggerInterface $logger
-     * @param array $config
+     * @param LoggerInterface               $logger
+     * @param array                         $config
+     *
      */
     public function __construct(
         Connection $connection,
@@ -77,6 +78,7 @@ class EntityManager implements Session, EntityManagerInterface
         foreach ($this->config['mappings'] as $type => $mapping) {
             $entityDirectories[$type] = isset($mapping['dir']) ? $mapping['dir'] : false;
         }
+
         return $entityDirectories;
     }
 

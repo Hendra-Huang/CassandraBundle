@@ -108,7 +108,7 @@ class Configuration implements ConfigurationInterface
                 ->arrayNode('orm')
                     ->beforeNormalization()
                     ->ifTrue(static function ($v) {
-                        if (! empty($v) && ! class_exists(EntityManager::class)) {
+                        if (!empty($v) && !class_exists(EntityManager::class)) {
                             throw new LogicException('The cassandra/orm package is required when the cassandra.orm config is set.');
                         }
 
@@ -117,7 +117,7 @@ class Configuration implements ConfigurationInterface
                     ->then(static function ($v) {
                         $v = (array) $v;
                         // Key that should not be rewritten to the connection config
-                        $excludedKeys  = [
+                        $excludedKeys = [
                             'default_entity_manager' => true,
                             'mappings' => true,
                             'metadata_cache_driver' => true,
@@ -132,7 +132,7 @@ class Configuration implements ConfigurationInterface
                             unset($v[$key]);
                         }
                         $v['default_entity_manager'] = isset($v['default_entity_manager']) ? (string) $v['default_entity_manager'] : 'default';
-                        $v['entity_managers']        = [$v['default_entity_manager'] => $entityManager];
+                        $v['entity_managers'] = [$v['default_entity_manager'] => $entityManager];
 
                         return $v;
                     })

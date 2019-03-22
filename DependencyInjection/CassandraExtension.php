@@ -47,17 +47,19 @@ class CassandraExtension extends Extension
     /**
      * @param string $connectionId
      * @param string $defaultEmName
-     * @param array $emConfigs
+     * @param array  $emConfigs
      * @return array
+     *
      */
     private function getEntityManagerConfiguration($connectionId, $defaultEmName, $emConfigs)
     {
         if (!isset($emConfigs[$defaultEmName])) {
             throw new \InvalidArgumentException('Undefined default entity manager in config "orm.entity_managers"');
         }
-        if (isset($emConfigs[$connectionId])){
+        if (isset($emConfigs[$connectionId])) {
             return $emConfigs[$connectionId];
         }
+
         return $emConfigs[$defaultEmName];
     }
 

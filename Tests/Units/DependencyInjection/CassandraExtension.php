@@ -256,7 +256,7 @@ class CassandraExtension extends test
             ->isInstanceOf('CassandraBundle\Cassandra\ORM\EntityManager')
             ->array($em->getTargetedEntityDirectories())
             ->isNotEmpty()
-            ->hasKeys(array('TestOne', 'TestTwo'));
+            ->hasKeys(['TestOne', 'TestTwo']);
     }
 
     protected function unexpectedConfigValueDataProvider()
