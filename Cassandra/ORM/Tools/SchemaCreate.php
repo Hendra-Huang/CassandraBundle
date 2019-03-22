@@ -22,7 +22,7 @@ class SchemaCreate
             $entityDirectories = array_map(function($entityDirectory) {
                 return str_replace('/', '\/', $entityDirectory);
             }, $entityDirectories);
-            $entityDirectoriesRegexp = sprintf('/((%s))/', implode('),', $entityDirectories));
+            $entityDirectoriesRegexp = sprintf('/((%s))/', implode(')|(', $entityDirectories));
         }
 
         // Get all files in src/*/Entity directories
