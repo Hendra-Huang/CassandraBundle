@@ -46,9 +46,10 @@ class CassandraExtension extends Extension
     }
 
     /**
-     * @param   $defaultEmName
-     * @param   $emConfigs
-     * @throws  \InvalidArgumentException
+     * @param  $defaultEmName
+     * @param  $emConfigs
+     *
+     * @throws \InvalidArgumentException
      */
     private function validateEntityManagerConfiguration($defaultEmName, $emConfigs)
     {
