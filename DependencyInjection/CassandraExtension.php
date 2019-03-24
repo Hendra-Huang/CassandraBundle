@@ -33,6 +33,7 @@ class CassandraExtension extends Extension
         }
         $this->metadataFactoryLoad($container, $ormConfig);
 
+        $this->validateEntityManagerConfiguration($ormConfig['default_entity_manager'], $ormConfig['entity_managers']);
         foreach ($config['connections'] as $connectionId => $connectionConfig) {
             $emConfig = $this->getEntityManagerConfiguration(
                 $connectionId,
@@ -45,6 +46,18 @@ class CassandraExtension extends Extension
     }
 
     /**
+     * @param   $defaultEmName
+     * @param   $emConfigs
+     * @throws  \InvalidArgumentException
+     */
+    private function validateEntityManagerConfiguration($defaultEmName, $emConfigs)
+    {
+        if (!isset($emConfigs[$defaultEmName])) {
+            throw new \InvalidArgumentException('Undefined default entity manager in config "orm.entity_managers"');
+        }
+    }
+
+    /**
      * @param string $connectionId
      * @param string $defaultEmName
      * @param array  $emConfigs
@@ -53,9 +66,6 @@ class CassandraExtension extends Extension
      */
     private function getEntityManagerConfiguration($connectionId, $defaultEmName, $emConfigs)
     {
-        if (!isset($emConfigs[$defaultEmName])) {
-            throw new \InvalidArgumentException('Undefined default entity manager in config "orm.entity_managers"');
-        }
         if (isset($emConfigs[$connectionId])) {
             return $emConfigs[$connectionId];
         }

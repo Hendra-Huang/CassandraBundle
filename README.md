@@ -189,6 +189,8 @@ In the bundle, you can map some Entity folders to an entityManager to then creat
 There is a configuration parameter under ``orm`` called ``entity_managers`` where you can describe each ``entity_manager``.
 The entityManager config contains the linked connection and the entity mapping directories.
 
+If the linked connection can't be found, will fallback to default connection
+
 ## Configuration reference
 
 ```yaml
@@ -222,6 +224,7 @@ cassandra:
         client_name:
             ...
     orm:
+        default_entity_manager: default
         entity_managers:
             default:
                 connection: default

@@ -124,7 +124,6 @@ class Configuration implements ConfigurationInterface
                         ];
                         $entityManager = [];
                         foreach ($v as $key => $value) {
-                            var_dump($key);
                             if (isset($excludedKeys[$key])) {
                                 continue;
                             }
