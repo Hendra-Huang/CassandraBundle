@@ -11,10 +11,11 @@ class SchemaCreate
         $this->container = $container;
     }
 
-    public function execute($connection = 'default')
+    public function execute($connection = 'default', $dumpCql = false)
     {
         $em = $this->container->get(sprintf('cassandra.%s_entity_manager', $connection));
         $schemaManager = $em->getSchemaManager();
+        $schemaManager->forceDumpCql($dumpCql);
 
         $entityDirectoriesRegexp = '/src\/.*Entity\//';
         $entityDirectories = $em->getTargetedEntityDirectories();

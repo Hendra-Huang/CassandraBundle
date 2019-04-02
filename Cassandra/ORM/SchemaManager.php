@@ -8,6 +8,8 @@ class SchemaManager
 {
     protected $connection;
 
+    private $dumpCql = false;
+
     public function __construct(Connection $connection)
     {
         $this->connection = $connection;
@@ -15,8 +17,17 @@ class SchemaManager
 
     private function _exec($cql)
     {
+        if ($this->dumpCql) {
+            echo $cql . PHP_EOL;
+            return;
+        }
         $statement = $this->connection->prepare($cql);
         $this->connection->execute($statement);
+    }
+
+    public function forceDumpCql($dumpCql)
+    {
+        $this->dumpCql = $dumpCql;
     }
 
     public function createTable($name, $fields, $primaryKeyFields = [], $tableOptions = [])
