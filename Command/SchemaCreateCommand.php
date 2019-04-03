@@ -41,6 +41,7 @@ class SchemaCreateCommand extends ContainerAwareCommand
 
         if ($dumpCql) {
             $output->writeln(sprintf('CQL schema dump for connection %', $connection));
+            $output->writeln('#######');
             $output->writeln(implode(PHP_EOL, $dumpOutputs));
         } else {
             $output->writeln('Cassandra schema updated successfully!');

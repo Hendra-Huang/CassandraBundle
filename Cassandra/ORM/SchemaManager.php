@@ -87,7 +87,7 @@ class SchemaManager
      */
     public function dropTable($name)
     {
-        return $this->_exec(sprintf('DROP TABLE IF EXISTS %s', $name));
+        return $this->_exec(sprintf('DROP TABLE IF EXISTS %s;', $name));
     }
 
     /**
@@ -114,6 +114,6 @@ class SchemaManager
      */
     private function createIndex($tableName, $index)
     {
-        return $this->_exec(sprintf('CREATE INDEX ON %s (%s)', $tableName, $index));
+        return $this->_exec(sprintf('CREATE INDEX ON %s (%s);', $tableName, $index));
     }
 }
