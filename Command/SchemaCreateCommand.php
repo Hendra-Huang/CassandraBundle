@@ -45,7 +45,5 @@ class SchemaCreateCommand extends ContainerAwareCommand
         } else {
             $output->writeln('Cassandra schema updated successfully!');
         }
-
-
     }
 }

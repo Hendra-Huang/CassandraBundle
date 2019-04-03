@@ -18,6 +18,7 @@ class SchemaManager
 
     /**
      * @param string $cql
+     *
      * @return string
      */
     private function _exec($cql)
@@ -26,6 +27,7 @@ class SchemaManager
             $statement = $this->connection->prepare($cql);
             $this->connection->execute($statement);
         }
+
         return $cql;
     }
 
@@ -39,9 +41,9 @@ class SchemaManager
 
     /**
      * @param string $name
-     * @param array $fields
-     * @param array $primaryKeyFields
-     * @param array $tableOptions
+     * @param array  $fields
+     * @param array  $primaryKeyFields
+     * @param array  $tableOptions
      *
      * @return string
      */
@@ -90,7 +92,7 @@ class SchemaManager
 
     /**
      * @param string $tableName
-     * @param array $indexes
+     * @param array  $indexes
      *
      * @return string
      */
@@ -100,6 +102,7 @@ class SchemaManager
         foreach ($indexes as $index) {
             $indexesCql[] = $this->createIndex($tableName, $index);
         }
+
         return implode(PHP_EOL, $indexesCql);
     }
 
