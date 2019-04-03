@@ -10,7 +10,7 @@ class SchemaManager extends test
     /**
      * @dataProvider tableConfigProvider
      */
-    public function testCreateTable($tableName, $fields, $primaryKeys, $tableOptions, $expectedCQL)
+    public function testICreateTable($tableName, $fields, $primaryKeys, $tableOptions, $expectedCQL)
     {
         $this
             ->and($connectionMock = $this->getConnectionMock())
@@ -25,6 +25,27 @@ class SchemaManager extends test
             ->withIdenticalArguments($expectedCQL)->once()
             ->call('execute')
             ->once();
+    }
+
+    /**
+     * @dataProvider tableConfigProvider
+     */
+    public function testIWontCreateTableWhenDumpCQL($tableName, $fields, $primaryKeys, $tableOptions, $expectedCQL)
+    {
+        $this
+            ->and($connectionMock = $this->getConnectionMock())
+            ->and($clusterMock = $this->getClusterMock())
+            ->and($sessionMock = $this->getSessionMock())
+            ->and($clusterMock->getMockController()->connect = $sessionMock)
+            ->and($connectionMock->setCluster($clusterMock))
+            ->given($testedClass = new TestedSchemaManager($connectionMock))
+            ->if($testedClass->forceDumpCql(true))
+            ->and($testedClass->createTable($tableName, $fields, $primaryKeys, $tableOptions))
+            ->mock($connectionMock)
+            ->call('prepare')
+            ->never()
+            ->call('execute')
+            ->never();
     }
 
     protected function tableConfigProvider()

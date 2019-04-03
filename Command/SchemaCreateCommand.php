@@ -37,8 +37,15 @@ class SchemaCreateCommand extends ContainerAwareCommand
         $schemaCreate = $container->get('cassandra.tools.schema_create');
         $connection = $input->getArgument('connection') ?: 'default';
         $dumpCql = true === $input->getOption('dump-cql');
-        $schemaCreate->execute($connection, $dumpCql);
+        $dumpOutputs = $schemaCreate->execute($connection, $dumpCql);
 
-        $output->writeln('Cassandra schema updated successfully!');
+        if ($dumpCql) {
+            $output->writeln(sprintf('CQL schema dump for connection %', $connection));
+            $output->writeln(implode(PHP_EOL, $dumpOutputs));
+        } else {
+            $output->writeln('Cassandra schema updated successfully!');
+        }
+
+
     }
 }

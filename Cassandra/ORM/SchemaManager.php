@@ -8,6 +8,7 @@ class SchemaManager
 {
     protected $connection;
 
+    /** @var bool */
     private $dumpCql = false;
 
     public function __construct(Connection $connection)
@@ -15,21 +16,35 @@ class SchemaManager
         $this->connection = $connection;
     }
 
+    /**
+     * @param string $cql
+     * @return string
+     */
     private function _exec($cql)
     {
-        if ($this->dumpCql) {
-            echo $cql . PHP_EOL;
-            return;
+        if (!$this->dumpCql) {
+            $statement = $this->connection->prepare($cql);
+            $this->connection->execute($statement);
         }
-        $statement = $this->connection->prepare($cql);
-        $this->connection->execute($statement);
+        return $cql;
     }
 
+    /**
+     * @param bool $dumpCql
+     */
     public function forceDumpCql($dumpCql)
     {
         $this->dumpCql = $dumpCql;
     }
 
+    /**
+     * @param string $name
+     * @param array $fields
+     * @param array $primaryKeyFields
+     * @param array $tableOptions
+     *
+     * @return string
+     */
     public function createTable($name, $fields, $primaryKeyFields = [], $tableOptions = [])
     {
         $fieldsWithType = array_map(function ($field) {
@@ -60,23 +75,42 @@ class SchemaManager
             }
         }
 
-        $this->_exec(sprintf('CREATE TABLE %s (%s%s)%s;', $name, implode(',', $fieldsWithType), $primaryKeyCQL, $tableOptionsCQL));
+        return $this->_exec(sprintf('CREATE TABLE %s (%s%s)%s;', $name, implode(',', $fieldsWithType), $primaryKeyCQL, $tableOptionsCQL));
     }
 
+    /**
+     * @param string $name
+     *
+     * @return string
+     */
     public function dropTable($name)
     {
-        $this->_exec(sprintf('DROP TABLE IF EXISTS %s', $name));
+        return $this->_exec(sprintf('DROP TABLE IF EXISTS %s', $name));
     }
 
+    /**
+     * @param string $tableName
+     * @param array $indexes
+     *
+     * @return string
+     */
     public function createIndexes($tableName, $indexes)
     {
+        $indexesCql = [];
         foreach ($indexes as $index) {
-            $this->createIndex($tableName, $index);
+            $indexesCql[] = $this->createIndex($tableName, $index);
         }
+        return implode(PHP_EOL, $indexesCql);
     }
 
-    public function createIndex($tableName, $index)
+    /**
+     * @param string $tableName
+     * @param string $index
+     *
+     * @return string
+     */
+    private function createIndex($tableName, $index)
     {
-        $this->_exec(sprintf('CREATE INDEX ON %s (%s)', $tableName, $index));
+        return $this->_exec(sprintf('CREATE INDEX ON %s (%s)', $tableName, $index));
     }
 }
