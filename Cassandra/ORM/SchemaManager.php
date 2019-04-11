@@ -97,7 +97,7 @@ class SchemaManager
             return sprintf('%s = %s', $optionName, $optionValue);
         }
         // string type
-        return sprintf('%s = "%s"', $optionName, addslashes($optionValue));
+        return sprintf("%s = '%s'", $optionName, addslashes($optionValue));
     }
 
     /**

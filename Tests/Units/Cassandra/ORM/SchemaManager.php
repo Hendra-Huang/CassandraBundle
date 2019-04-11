@@ -107,7 +107,7 @@ class SchemaManager extends test
                 ],
                 ['id', 'date'],
                 ['compactStorage' => true, 'comment' => 'A comment to describe the objective of the table'],
-                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH COMPACT STORAGE AND comment = "A comment to describe the objective of the table";',
+                "CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH COMPACT STORAGE AND comment = 'A comment to describe the objective of the table';",
             ],
             [
                 'test',
