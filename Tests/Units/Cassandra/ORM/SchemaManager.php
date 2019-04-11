@@ -97,6 +97,30 @@ class SchemaManager extends test
                 ['compactStorage' => true, 'clusteringOrder' => 'date DESC'],
                 'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH COMPACT STORAGE AND CLUSTERING ORDER BY (date DESC);',
             ],
+            [
+                'test',
+                [
+                    ['columnName' => 'id', 'type' => 'uuid'],
+                    ['columnName' => 'name', 'type' => 'text'],
+                    ['columnName' => 'lastname', 'type' => 'text'],
+                    ['columnName' => 'date', 'type' => 'timestamp'],
+                ],
+                ['id', 'date'],
+                ['compactStorage' => true, 'comment' => 'A comment to describe the objective of the table'],
+                'CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH COMPACT STORAGE AND comment = "A comment to describe the objective of the table";',
+            ],
+            [
+                'test',
+                [
+                    ['columnName' => 'id', 'type' => 'uuid'],
+                    ['columnName' => 'name', 'type' => 'text'],
+                    ['columnName' => 'lastname', 'type' => 'text'],
+                    ['columnName' => 'date', 'type' => 'timestamp'],
+                ],
+                ['id', 'date'],
+                ['compaction' => "{ 'class' : 'LeveledCompactionStrategy' }"],
+                "CREATE TABLE test (id uuid,name text,lastname text,date timestamp,PRIMARY KEY (id,date)) WITH compaction = { 'class' : 'LeveledCompactionStrategy' };",
+            ],
         ];
     }
 

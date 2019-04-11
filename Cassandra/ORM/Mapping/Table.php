@@ -46,5 +46,16 @@ final class Table extends Annotation
     public $tableOptions = [
         'compactStorage' => false,
         'clusteringOrder' => null,
+        'comment' => null,
+        'speculative_retry' => null,
+        'additional_write_policy' => null,
+        'gc_grace_seconds' => null,
+        'bloom_filter_fp_chance' => null,
+        'default_time_to_live' => null,
+        'compaction' => null,
+        'compression' => null,
+        'caching' => null,
+        'memtable_flush_period_in_ms' => null,
+        'read_repair' => null,
     ];
 }

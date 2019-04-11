@@ -64,12 +64,14 @@ class SchemaManager
 
         if (!empty($tableOptions)) {
             $tableOptionsParamCQL = [];
-            if (isset($tableOptions['compactStorage']) && false !== $tableOptions['compactStorage']) {
-                $tableOptionsParamCQL[] = 'COMPACT STORAGE';
-            }
-
-            if (isset($tableOptions['clusteringOrder']) && null !== $tableOptions['clusteringOrder']) {
-                $tableOptionsParamCQL[] = sprintf('CLUSTERING ORDER BY (%s)', $tableOptions['clusteringOrder']);
+            foreach ($tableOptions as $optionName => $optionValue) {
+                if ($optionName === 'compactStorage' && false !== $optionValue) {
+                    $tableOptionsParamCQL[] = 'COMPACT STORAGE';
+                } elseif ($optionName === 'clusteringOrder' && null !== $optionValue) {
+                    $tableOptionsParamCQL[] = sprintf('CLUSTERING ORDER BY (%s)', $optionValue);
+                } elseif (!in_array($optionName, ['compactStorage', 'clusteringOrder'])) {
+                    $tableOptionsParamCQL[] = $this->formatOption($optionName, $optionValue);
+                }
             }
 
             if (!empty($tableOptionsParamCQL)) {
@@ -78,6 +80,23 @@ class SchemaManager
         }
 
         return $this->_exec(sprintf('CREATE TABLE %s (%s%s)%s;', $name, implode(',', $fieldsWithType), $primaryKeyCQL, $tableOptionsCQL));
+    }
+
+    private function formatOption($optionName, $optionValue)
+    {
+        // numeric type : float or int
+        if (in_array($optionName, ['gc_grace_seconds' ,'memtable_flush_period_in_ms', 'default_time_to_live', 'bloom_filter_fp_chance'])) {
+            if (!is_numeric($optionValue)) {
+                throw SchemaException::wrongFormatForNumericTableOption($optionName, $optionValue);
+            }
+            return sprintf('%s = %s', $optionName, $optionValue);
+        }
+        // map type
+        if (in_array($optionName, ['compaction', 'compression', 'caching'])) {
+            return sprintf('%s = %s', $optionName, $optionValue);
+        }
+        // string type
+        return sprintf('%s = "%s"', $optionName, addslashes($optionValue));
     }
 
     /**
