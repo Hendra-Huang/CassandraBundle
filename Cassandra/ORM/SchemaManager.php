@@ -85,7 +85,7 @@ class SchemaManager
     private function formatOption($optionName, $optionValue)
     {
         // numeric type : float or int
-        if (\in_array($optionName, ['gc_grace_seconds' ,'memtable_flush_period_in_ms', 'default_time_to_live', 'bloom_filter_fp_chance'])) {
+        if (\in_array($optionName, ['gc_grace_seconds', 'memtable_flush_period_in_ms', 'default_time_to_live', 'bloom_filter_fp_chance'])) {
             if (!is_numeric($optionValue)) {
                 throw SchemaException::wrongFormatForNumericTableOption($optionName, $optionValue);
             }
