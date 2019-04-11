@@ -65,11 +65,11 @@ class SchemaManager
         if (!empty($tableOptions)) {
             $tableOptionsParamCQL = [];
             foreach ($tableOptions as $optionName => $optionValue) {
-                if ($optionName === 'compactStorage' && false !== $optionValue) {
+                if ('compactStorage' === $optionName && false !== $optionValue) {
                     $tableOptionsParamCQL[] = 'COMPACT STORAGE';
-                } elseif ($optionName === 'clusteringOrder' && null !== $optionValue) {
+                } elseif ('clusteringOrder' === $optionName && null !== $optionValue) {
                     $tableOptionsParamCQL[] = sprintf('CLUSTERING ORDER BY (%s)', $optionValue);
-                } elseif (!in_array($optionName, ['compactStorage', 'clusteringOrder'])) {
+                } elseif (!\in_array($optionName, ['compactStorage', 'clusteringOrder'])) {
                     $tableOptionsParamCQL[] = $this->formatOption($optionName, $optionValue);
                 }
             }
@@ -85,14 +85,15 @@ class SchemaManager
     private function formatOption($optionName, $optionValue)
     {
         // numeric type : float or int
-        if (in_array($optionName, ['gc_grace_seconds' ,'memtable_flush_period_in_ms', 'default_time_to_live', 'bloom_filter_fp_chance'])) {
+        if (\in_array($optionName, ['gc_grace_seconds' ,'memtable_flush_period_in_ms', 'default_time_to_live', 'bloom_filter_fp_chance'])) {
             if (!is_numeric($optionValue)) {
                 throw SchemaException::wrongFormatForNumericTableOption($optionName, $optionValue);
             }
+
             return sprintf('%s = %s', $optionName, $optionValue);
         }
         // map type
-        if (in_array($optionName, ['compaction', 'compression', 'caching'])) {
+        if (\in_array($optionName, ['compaction', 'compression', 'caching'])) {
             return sprintf('%s = %s', $optionName, $optionValue);
         }
         // string type
