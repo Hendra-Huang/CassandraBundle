@@ -2,10 +2,11 @@ services:
     cassandra.data_collector:
         class: "CassandraBundle\\DataCollector\\CassandraDataCollector"
         tags:
-            - { name: data_collector, template: 'CassandraBundle:Collector:cassandra', id: 'cassandra' }
+            - { name: data_collector, template: '@CassandraBundle/Collector/cassandra', id: 'cassandra' }
             - { name: kernel.event_listener, event: cassandra, method: onCassandraCommand }
 
     cassandra.tools.schema_create:
         class: "CassandraBundle\\Cassandra\\ORM\\Tools\\SchemaCreate"
         arguments: ["@service_container"]
         public: true
+

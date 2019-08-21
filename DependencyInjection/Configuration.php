@@ -21,8 +21,8 @@ class Configuration implements ConfigurationInterface
      */
     public function getConfigTreeBuilder()
     {
-        $treeBuilder = new TreeBuilder();
-        $rootNode = $treeBuilder->root('cassandra');
+        $treeBuilder = new TreeBuilder('cassandra');
+        $rootNode = $treeBuilder->getRootNode();
 
         $rootNode
             ->children()

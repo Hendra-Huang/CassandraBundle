@@ -3,7 +3,7 @@
 namespace CassandraBundle\Cassandra\ORM;
 
 use Cassandra\BatchStatement;
-use Cassandra\Session;
+use Cassandra\PreparedStatement;
 use Cassandra\Type;
 use CassandraBundle\Cassandra\Connection;
 use CassandraBundle\Cassandra\ORM\Mapping\ClassMetadata;
@@ -14,7 +14,7 @@ use CassandraBundle\Cassandra\Utility\Type as CassandraType;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 
-class EntityManager implements Session, EntityManagerInterface
+class EntityManager implements \Cassandra\Session, EntityManagerInterface
 {
     protected $connection;
     private $metadataFactory;
@@ -178,6 +178,7 @@ class EntityManager implements Session, EntityManagerInterface
         return $statement;
     }
 
+
     /**
      * Update $entity to cassandra.
      *
@@ -188,7 +189,36 @@ class EntityManager implements Session, EntityManagerInterface
      */
     public function update($entity, Options $options = null)
     {
-        return $this->insert($entity, $options);
+        $metadata = $this->getClassMetadata(\get_class($entity));
+        $tableName = $metadata->table['name'];
+        $values = $this->readColumn($entity, $metadata);
+
+        $where = '';
+        $count = 0;
+        $valuesCopy = $values;
+        foreach ($metadata->table['primaryKeys'] as $primaryKey) {
+            unset($valuesCopy[$primaryKey]);
+            if ($count >= 1) {
+                $where .= 'AND ';
+            }
+            $where .= $primaryKey.' = ? ';
+            $count++;
+        }
+
+        $columns = array_keys($valuesCopy);
+
+        $statement = sprintf(
+            'UPDATE "%s"."%s" SET %s = ? WHERE %s IF EXISTS',
+            $this->getKeyspace(),
+            $tableName,
+            implode( ' = ?, ', $columns),
+            $where
+        );
+
+        $this->statements[] = [
+            self::STATEMENT => $statement,
+            self::ARGUMENTS => $values,
+        ];
     }
 
     /**
@@ -228,12 +258,14 @@ class EntityManager implements Session, EntityManagerInterface
             }
 
             if ($async) {
-                $this->executeAsync($batch);
+                $rows = $this->executeAsync($batch);
             } else {
-                $this->execute($batch);
+                $rows = $this->execute($batch);
             }
             $this->logger->debug('CASSANDRA: END');
             $this->statements = [];
+
+            return $rows;
         }
     }
 

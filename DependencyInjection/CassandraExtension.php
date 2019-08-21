@@ -16,6 +16,11 @@ use Symfony\Component\DependencyInjection\Reference;
  */
 class CassandraExtension extends Extension
 {
+
+    private $connections = [];
+    private $entityManagers = [];
+    private $defaultEntityManger;
+
     /**
      * {@inheritdoc}
      */
@@ -43,6 +48,7 @@ class CassandraExtension extends Extension
             $connectionConfig['dispatch_events'] = $config['dispatch_events'];
             $this->ormLoad($container, $connectionId, $connectionConfig, $emConfig);
         }
+        $this->managerRegistryLoad($container, $config);
     }
 
     /**
@@ -108,6 +114,30 @@ class CassandraExtension extends Extension
             ->addArgument(new Reference('cassandra.factory.metadata'))
             ->addArgument(new Reference('logger'))
             ->addArgument($emConfig)
+            ->setPublic(true);
+    }
+
+    /**
+     * @param ContainerBuilder $container
+     * @param $config
+     */
+    protected function managerRegistryLoad(ContainerBuilder $container, $config)
+    {
+        $this->defaultEntityManger = sprintf('cassandra.%s_entity_manager', $config['orm']['default_entity_manager']);
+        foreach ($config['orm']['entity_managers'] as $key => $details) {
+            $this->entityManagers[$key] = sprintf('cassandra.%s_entity_manager', $details['connection']);
+            array_push($this->connections, sprintf('cassandra.connection.%s', $details['connection']));
+        }
+
+        $container
+            ->register(sprintf('cassandra.manager_registry'), 'CassandraBundle\\Cassandra\\ManagerRegistry')
+            ->addArgument('cassandra.manager_registry')
+            ->addArgument($this->connections)
+            ->addArgument($this->entityManagers)
+            ->addArgument($this->defaultEntityManger)
+            ->addArgument(new Reference($this->defaultEntityManger))
+            ->addArgument($config)
+            ->addArgument(new Reference('Psr\Container\ContainerInterface'))
             ->setPublic(true);
     }
 
