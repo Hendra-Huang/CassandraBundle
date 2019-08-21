@@ -105,6 +105,16 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
             return $this->loadedMetadata[$className];
         }
 
+        // Check default Symfony Namespace if class not found
+        if (!class_exists($className)) {
+            $sfAppNamespace = 'App\\';
+            if (class_exists($sfAppNamespace.$className)) {
+                $className = $sfAppNamespace.$className;
+            } else {
+                throw new \Exception(sprintf('Class %s not found.', $className));
+            }
+        }
+
         // Check for namespace alias
         if (false !== strpos($className, ':')) {
             list($namespaceAlias, $simpleClassName) = explode(':', $className, 2);
@@ -241,5 +251,16 @@ class ClassMetadataFactory implements ClassMetadataFactoryInterface
                 return $config['prefix'].'\\'.$simpleClassName;
             }
         }
+    }
+
+    /**
+     * Check if class belongs to this entity manager
+     *
+     * @param $class
+     * @return bool
+     */
+    public function isTransient($class)
+    {
+        return false == strpos($class, 'Entity');
     }
 }
